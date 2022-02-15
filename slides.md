@@ -144,7 +144,7 @@ layout: two-cols
 
 <v-click>
 
-```csharp {all|1-15|16-18|all}
+```csharp {7-15|1-5|16-18|all}
 class EmailService {
   public void sendEmail(string from, string to, string subject, string body){
     // sends email over network...
@@ -182,7 +182,22 @@ registrationService.register("developer", "dummyemail@gmail.com", "hashedpasswor
 
 <v-click>
 
-#### Dependency Inversion
+#### Dependency injection & Dependency Inversion
+
+</v-click>
+
+<v-click>
+
+<figure>
+  <img src="images/dependency_inversion.jpeg">
+  <figcaption>Dependency Inversion</figcaption>
+</figure>
+
+<style>
+  h4 {
+    padding: 10px 0;
+  }
+</style>
 
 </v-click>
 
@@ -197,7 +212,7 @@ registrationService.register("developer", "dummyemail@gmail.com", "hashedpasswor
 
 <v-click>
 
-```csharp {all|1-3|5-9|all}
+```csharp {1-3|1-9}
 interface IEmailService {
   void sendEmail(string from, string to, string subject, string body);
 }
@@ -219,7 +234,7 @@ class EmailService: IEmailService {
 >
 > -- <cite>David Wheeler</cite>
 
-```csharp {all|3-7|15-18|all}
+```csharp {none|3-7|15-18|9-12|all}
 class RegistrationService {
 
   private IEmailService _emailService;
@@ -240,6 +255,37 @@ var registrationService = new RegistrationService(emailService);
 registrationService.register("developer", "dummyemail@gmail.com", "hashedpassword");
 ```
 
+---
+
+# Writing Testable code (continued...)
+
+```csharp {none|1-11|13-17|all}
+// TestRegistrationService.cs
+
+class FakeEmailService: IEmailService {
+
+  public boolean EmailSent { get; private set; } = false;
+
+  public function sendEmail(string from, string to, string subject, string body){
+    // doesn't really send an email
+    this.EmailSent = true;
+  }
+}
+
+// in unit tests
+
+// Arrange
+IEmailService fakeEmailService = new FakeEmailService();
+var registrationService = new RegistrationService(fakeEmailService);
+
+// Act
+registrationService.register("developer", "dummyemail@gmail.com", "hashedpassword");
+
+// Assert
+Assert.True(fakeEmailService.EmailSent);
+
+```
+
 
 ---
 
@@ -256,7 +302,7 @@ image: https://source.unsplash.com/collection/94734566/1920x1080
 
 Use code snippets and get the highlighting directly![^1]
 
-```ts{all|2|1-6|9|all}
+```ts{all|2|1-6|9}
 interface User {
   id: number
   firstName: string
