@@ -81,7 +81,7 @@ layout: two-cols
 
 ::right::
 <figure>
-  <img src="images/testpyramid.jpg">
+  <img src="/images/testpyramid.jpg">
   <figcaption>Test Pyramid</figcaption>
 </figure>
 
@@ -105,7 +105,7 @@ layout: two-cols
 ::right::
 <v-click>
 <figure>
-  <img src="images/balancedtests.jpg">
+  <img src="/images/balancedtests.jpg">
 </figure>
 </v-click>
 
@@ -189,7 +189,7 @@ registrationService.register("developer", "dummyemail@gmail.com", "hashedpasswor
 <v-click>
 
 <figure>
-  <img src="images/dependency_inversion.jpeg">
+  <img src="/images/dependency_inversion.jpeg">
   <figcaption>Dependency Inversion</figcaption>
 </figure>
 
@@ -420,35 +420,6 @@ registrationService.register("developer", "dummyemail@gmail.com", "hashedpasswor
 Assert.True(testEmailService.EmailSent);
 
 ```
-
-
----
-layout: image-right
-image: https://source.unsplash.com/collection/94734566/1920x1080
----
-
-# Code
-
-Use code snippets and get the highlighting directly![^1]
-
-```ts{all|2|1-6|9}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
-
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = {...user, ...update}  
-  saveUser(id, newUser)
-}
-```
-
-<arrow v-click="3" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
----
 
 # Further Reading
 
