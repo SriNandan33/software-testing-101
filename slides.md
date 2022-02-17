@@ -262,7 +262,7 @@ registrationService.register("developer", "dummyemail@gmail.com", "hashedpasswor
 ```csharp {none|1-11|13-17|all}
 // TestRegistrationService.cs
 
-class FakeEmailService: IEmailService {
+class TestEmailService: IEmailService {
 
   public boolean EmailSent { get; private set; } = false;
 
@@ -275,14 +275,14 @@ class FakeEmailService: IEmailService {
 // in unit tests
 
 // Arrange
-IEmailService fakeEmailService = new FakeEmailService();
-var registrationService = new RegistrationService(fakeEmailService);
+IEmailService testEmailService = new TestEmailService();
+var registrationService = new RegistrationService(testEmailService);
 
 // Act
 registrationService.register("developer", "dummyemail@gmail.com", "hashedpassword");
 
 // Assert
-Assert.True(fakeEmailService.EmailSent);
+Assert.True(testEmailService.EmailSent);
 
 ```
 
@@ -290,7 +290,136 @@ Assert.True(fakeEmailService.EmailSent);
 ---
 
 # Test Doubles
+   - Mock
+   - Spy
+   - Stub
+   - Dummy
+   - Fake
 
+---
+
+# Example
+
+```csharp
+class Netflix {
+  // ... member inititalizations
+
+  public Netflix(User user, IMovieStore movieStore, 
+                 IStreamingService streamingService, IScreenTracker screenTracker
+  ) {
+    this._user = user;
+    this._streamingService = streamingService;
+    this._movieStore = movieStore;
+    this._screenTracker = screenTracker;
+  }
+
+  public void ListMovies(int offset, int limit){
+    return _movieStore.list(offset, limit);
+  }
+
+  public void WatchMovie(Movie movie) {
+    if(this._screenTracker.canWatch(_user.username)) {
+      this._screenTracker.track(movie);
+      this._streamingService.stream(movie);
+    }
+  }
+}
+
+```
+
+---
+
+# Test Watch Movie
+
+```csharp
+public void testWatchMovie(){
+  var tester = new User("tester", "tester@gmail.com");
+  var mockStreamingService = new Mock<IStreamingService>();
+  var StubScreenTracker = new Mock<IScreenTracker>();
+  StubScreenTracker.Setup(tracker => tracker.canWatch(tester.username))
+      .Returns(true);
+  var netflix = new Netflix(user, null, mockStreamingService.Object, StubScreenTracker.Object);
+  var movie = new Movie("Pushpa", "http://link-to-video");
+
+  netflix.WatchMovie(movie);
+
+  mockStreamingService.Verify(SS => SS.stream(movie), Times.Exactly(1));
+}
+```
+
+---
+
+# Lets test Movie list
+
+```csharp
+
+public void testListMovies(){
+  var tester = new User("tester", "tester@gmail.com");
+  var fakeMovieStore = new FakeMovieStore();
+  var dummyStreamingService = null;
+  var dummyScreenTracker = new Mock<IScreenTracker>();
+  var netflix = new Netflix(user, fakeMovieStore, dummyStreamingService, dummyScreenTracker);
+
+  var movies = netflix.ListMovies(0, 2);
+
+  var expected = DEFAULT_MOVIES;
+  Assert.Equal(expected, movies);
+}
+```
+
+
+---
+
+# Fake Movie Store
+
+```csharp
+const DEFAULT_MOVIES = new List<Movie>() {
+  new Movie(){"Bahubali", "https://link-to-video"},
+  new Movie(){"RRR", "https://link-to-video"},
+};
+
+class FakeMovieStore : IMovieStore {
+  private List<Movie> _movies = DEFAULT_MOVIES;
+
+  public FakeMovieStore(){} // constructor
+
+  public insert(Movie movie) => _movies.Add(movie);
+
+  public list(int skip, int take) => _movies.Skip(skip).Take(take);
+}
+```
+
+
+---
+
+# Spy ( Hand written mocks)
+
+```csharp {monaco}
+// TestRegistrationService.cs
+// Here TestEmailService is a spy
+class TestEmailService: IEmailService {
+
+  public boolean EmailSent { get; private set; } = false;
+
+  public function sendEmail(string from, string to, string subject, string body){
+    // doesn't really send an email
+    this.EmailSent = true;
+  }
+}
+
+// in unit tests
+
+// Arrange
+IEmailService testEmailService = new TestEmailService();
+var registrationService = new RegistrationService(testEmailService);
+
+// Act
+registrationService.register("developer", "dummyemail@gmail.com", "hashedpassword");
+
+// Assert
+Assert.True(testEmailService.EmailSent);
+
+```
 
 
 ---
@@ -329,3 +458,4 @@ function updateUser(id: number, update: User) {
 # Resources
 
 - https://martinfowler.com/testing/
+- https://www.softwaretestingmagazine.com/knowledge/unit-testing-fakes-mocks-and-stubs/
