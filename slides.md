@@ -13,7 +13,7 @@ info: |
   Learn more at [Sli.dev](https://sli.dev)
 drawings:
   persist: false
-title: Unit Testing 101
+title: Software Testing 101
 ---
 
 # Software Testing 101
