@@ -432,3 +432,4 @@ Assert.True(testEmailService.EmailSent);
 
 - https://martinfowler.com/testing/
 - https://www.softwaretestingmagazine.com/knowledge/unit-testing-fakes-mocks-and-stubs/
+- https://anthonysciamanna.com/2014/12/06/xunit-is-not-unit-testing.html
