@@ -423,6 +423,24 @@ Assert.True(testEmailService.EmailSent);
 ```
 
 ---
+
+# Integration Testing
+
+---
+
+# Testing databases
+
+
+---
+
+# Testing external services
+
+
+---
+
+# Testing third party services
+
+---
 # Further Reading
 
 
